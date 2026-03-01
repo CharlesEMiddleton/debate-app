@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col">
       {/* Middleton News & Politics — Full Hero */}
-      <section className="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 via-transparent to-red-900/20" />
+      <section className="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-950 via-purple-950 to-red-950 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/30 via-transparent to-transparent" />
         <div className="absolute top-6 right-6 flex items-center gap-4 z-10">
           <Link href="/report-bug" className="text-xs text-white/50 hover:text-white/80 transition-colors">
             Report a Bug
