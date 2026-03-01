@@ -94,8 +94,8 @@ export default function WaitlistPage() {
       </header>
 
       {/* Combined Header + Waitlist */}
-      <section className="flex-1 w-full bg-gradient-to-b from-slate-950 via-blue-950 to-purple-950 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 via-transparent to-red-900/20" />
+      <section className="flex-1 w-full bg-gradient-to-r from-blue-950 via-purple-950 to-red-950 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/30 via-transparent to-transparent" />
 
         {/* Donkey - left side */}
         <div className="absolute left-0 sm:-left-4 md:-left-8 top-1/2 -translate-y-1/2 opacity-80">
@@ -180,7 +180,7 @@ export default function WaitlistPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  className="h-12 text-base font-semibold w-full bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 hover:from-blue-500 hover:via-purple-500 hover:to-red-400 text-white border-0"
+                  className="h-12 text-base font-semibold w-full bg-gray-900 hover:bg-gray-800 text-white border border-white/10"
                   disabled={isPending}
                 >
                   {isPending ? "Joining..." : "Join Waitlist"}

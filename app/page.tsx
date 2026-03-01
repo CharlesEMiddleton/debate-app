@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
+import { Typewriter } from "@/components/typewriter";
 
 export default function Home() {
   return (
@@ -15,18 +16,24 @@ export default function Home() {
           <ThemeSwitcher />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-6">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.05]">
+          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tight leading-[1.05]">
             <span className="bg-gradient-to-r from-blue-400 via-purple-300 to-red-400 bg-clip-text text-transparent">
               Middleton
             </span>
             <br />
-            <span className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide">
+            <span className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-wide">
               News & Politics
             </span>
           </h1>
-          <p className="text-white/60 text-lg sm:text-xl max-w-xl mx-auto">
-            The platform where everyday citizens become influential political
-            figures. Think of it as the LinkedIn for political leaders and ideas.
+          <p className="text-white/60 text-xl sm:text-2xl max-w-2xl mx-auto h-20 sm:h-16">
+            <Typewriter
+              prefix="The platform "
+              phrases={[
+                "where everyday citizens become influential political figures.",
+                "that serves as the LinkedIn for political leaders and ideas.",
+                "where elected officials collaborate with their constituents more efficiently.",
+              ]}
+            />
           </p>
         </div>
         <div className="absolute bottom-8 animate-bounce">
@@ -54,8 +61,21 @@ export default function Home() {
           </h1>
 
           <p className="text-muted-foreground text-lg sm:text-xl max-w-xl mx-auto leading-relaxed">
-            The platform where political leaders are discovered, debated, and
-            elevated. We&apos;re building something big, be the first to know.
+            The next generation of political leaders is upon us. Rise to power
+            by sharing your vision, answering the hard questions, and challenging
+            the status quo.
+          </p>
+
+          <p className="text-xl sm:text-2xl font-bold max-w-2xl mx-auto leading-snug tracking-tight">
+            Speak your truth.{" "}
+            <span className="text-2xl sm:text-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 bg-clip-text text-transparent">
+              Gain supporters.
+            </span>{" "}
+            Earn donations.{" "}
+            <br />
+            <span className="text-2xl sm:text-3xl bg-gradient-to-r from-red-500 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+              Get elected.
+            </span>
           </p>
 
           <div className="pt-2">
