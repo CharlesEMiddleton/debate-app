@@ -1,0 +1,239 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import Link from "next/link";
+
+const REQUEST_TYPES = [
+  { value: "bug_report", label: "Bug Report" },
+  { value: "tech_support", label: "Tech Support" },
+  { value: "feature_request", label: "Feature Request" },
+  { value: "other", label: "Other" },
+];
+
+export default function ReportBugPage() {
+  const [isPending, setIsPending] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setIsPending(true);
+
+    const formData = new FormData(e.currentTarget);
+    const fullName = (formData.get("full_name") as string)?.trim();
+    const email = (formData.get("email") as string)?.trim().toLowerCase();
+    const requestType = (formData.get("request_type") as string)?.trim();
+    const subject = (formData.get("subject") as string)?.trim();
+    const description = (formData.get("description") as string)?.trim();
+
+    if (!fullName || fullName.length < 2) {
+      setError("Please enter your full name.");
+      setIsPending(false);
+      return;
+    }
+
+    if (!email || !email.includes("@")) {
+      setError("Please enter a valid email address.");
+      setIsPending(false);
+      return;
+    }
+
+    if (!requestType) {
+      setError("Please select a request type.");
+      setIsPending(false);
+      return;
+    }
+
+    if (!subject || subject.length < 3) {
+      setError("Please enter a subject.");
+      setIsPending(false);
+      return;
+    }
+
+    if (!description || description.length < 10) {
+      setError("Please provide a more detailed description (at least 10 characters).");
+      setIsPending(false);
+      return;
+    }
+
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+
+      const res = await fetch(`${supabaseUrl}/rest/v1/bug_reports`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          full_name: fullName,
+          email,
+          request_type: requestType,
+          subject,
+          description,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        console.error("Bug report error:", data);
+        setError("Something went wrong. Please try again.");
+      } else {
+        setSubmitted(true);
+      }
+    } catch (err) {
+      console.error("Bug report error:", err);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  return (
+    <main className="min-h-screen flex flex-col">
+      <header className="w-full border-b border-border/40 backdrop-blur-sm bg-background/80 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-6 h-16">
+          <Link
+            href="/"
+            className="font-semibold text-lg tracking-tight hover:opacity-80 transition-opacity"
+          >
+            Middleton
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/report-bug" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              Report a Bug
+            </Link>
+            <ThemeSwitcher />
+          </div>
+        </div>
+      </header>
+
+      {/* Middleton News & Politics Header */}
+      <section className="w-full bg-gradient-to-r from-blue-900 via-purple-900 to-red-900 py-10">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+            <span className="bg-gradient-to-r from-blue-400 via-purple-300 to-red-400 bg-clip-text text-transparent">
+              Middleton News & Politics
+            </span>
+          </h2>
+        </div>
+      </section>
+
+      <section className="flex-1 flex flex-col items-center justify-center px-6 py-24 md:py-32">
+        <div className="max-w-lg w-full text-center space-y-8">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            Report a{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 bg-clip-text text-transparent">
+              Bug
+            </span>
+          </h1>
+
+          <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
+            Found an issue or need help? Let us know and we&apos;ll get back to
+            you as soon as possible.
+          </p>
+
+          {submitted ? (
+            <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-8 space-y-3">
+              <div className="text-4xl">&#10003;</div>
+              <h2 className="text-xl font-semibold">Report submitted!</h2>
+              <p className="text-muted-foreground text-sm">
+                Thanks for letting us know. We&apos;ll look into it and get back
+                to you.
+              </p>
+              <Button
+                variant="outline"
+                className="mt-4"
+                onClick={() => setSubmitted(false)}
+              >
+                Submit another report
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-left">
+                <Input
+                  name="full_name"
+                  type="text"
+                  placeholder="Full name"
+                  required
+                  minLength={2}
+                  className="h-12 text-base"
+                  disabled={isPending}
+                />
+                <Input
+                  name="email"
+                  type="email"
+                  placeholder="Email address"
+                  required
+                  className="h-12 text-base"
+                  disabled={isPending}
+                />
+                <select
+                  name="request_type"
+                  required
+                  disabled={isPending}
+                  className="flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm text-foreground"
+                  defaultValue=""
+                >
+                  <option value="" disabled className="text-muted-foreground">
+                    Select request type
+                  </option>
+                  {REQUEST_TYPES.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+                <Input
+                  name="subject"
+                  type="text"
+                  placeholder="Subject"
+                  required
+                  minLength={3}
+                  className="h-12 text-base"
+                  disabled={isPending}
+                />
+                <textarea
+                  name="description"
+                  placeholder="Describe the issue in detail..."
+                  required
+                  minLength={10}
+                  rows={5}
+                  disabled={isPending}
+                  className="flex w-full rounded-md border border-input bg-transparent px-3 py-3 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm resize-none"
+                />
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="h-12 text-base font-semibold w-full"
+                  disabled={isPending}
+                >
+                  {isPending ? "Submitting..." : "Submit Report"}
+                </Button>
+              </form>
+
+              {error && (
+                <p className="text-sm text-destructive font-medium">{error}</p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <footer className="w-full border-t border-border/40 py-8">
+        <div className="max-w-5xl mx-auto px-6 flex items-center justify-between text-xs text-muted-foreground">
+          <p>&copy; 2025 Middleton. All rights reserved.</p>
+          <p>Built for the future of politics.</p>
+        </div>
+      </footer>
+    </main>
+  );
+}
