@@ -98,20 +98,16 @@ export default function WaitlistPage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 via-transparent to-red-900/20" />
 
         {/* Donkey - left side */}
-        <div className="absolute left-4 sm:left-10 md:left-20 bottom-4 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 opacity-80">
-          <Image src="/donkey.png" alt="Democratic donkey" width={120} height={120} className="w-20 sm:w-24 md:w-32 h-auto drop-shadow-2xl" />
+        <div className="absolute left-2 sm:left-8 md:left-16 bottom-4 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 opacity-80">
+          <Image src="/donkey.png" alt="Democratic donkey" width={200} height={200} className="w-28 sm:w-36 md:w-48 h-auto drop-shadow-2xl" />
         </div>
 
         {/* Elephant - right side */}
-        <div className="absolute right-4 sm:right-10 md:right-20 bottom-4 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 opacity-80">
-          <Image src="/elephant.png" alt="Republican elephant" width={120} height={120} className="w-20 sm:w-24 md:w-32 h-auto drop-shadow-2xl" />
+        <div className="absolute right-2 sm:right-8 md:right-16 bottom-4 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 opacity-80">
+          <Image src="/elephant.png" alt="Republican elephant" width={200} height={200} className="w-28 sm:w-36 md:w-48 h-auto drop-shadow-2xl" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-4">
-          {/* Donkey vs Elephant - center above title */}
-          <div className="flex justify-center mb-4">
-            <Image src="/donkeyvselephant.png" alt="Donkey vs Elephant" width={200} height={100} className="w-40 sm:w-48 md:w-56 h-auto drop-shadow-2xl" />
-          </div>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1]">
             <span className="bg-gradient-to-r from-blue-400 via-purple-300 to-red-400 bg-clip-text text-transparent">
               Middleton
@@ -123,6 +119,14 @@ export default function WaitlistPage() {
           </h2>
           <p className="text-white/50 text-sm sm:text-base">
             Where the next generation of leaders is discovered.
+          </p>
+          <p className="text-white/70 text-lg lg:text-xl font-semibold italic tracking-wide">
+            "Fight for your opinion and make it a fact"
+            <br />
+            <br />
+          </p>
+          <p className="text-white/70 text-lg lg:text-xl font-semibold italic tracking-wide">
+            - Charles Middleton
           </p>
         </div>
       </section>
