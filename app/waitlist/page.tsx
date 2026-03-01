@@ -93,21 +93,21 @@ export default function WaitlistPage() {
         </div>
       </header>
 
-      {/* Middleton News & Politics Header */}
-      <section className="w-full bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 relative overflow-hidden py-20 md:py-28">
+      {/* Combined Header + Waitlist */}
+      <section className="flex-1 w-full bg-gradient-to-b from-slate-950 via-blue-950 to-purple-950 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 via-transparent to-red-900/20" />
 
         {/* Donkey - left side */}
-        <div className="absolute left-2 sm:left-8 md:left-16 bottom-4 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 opacity-80">
-          <Image src="/donkey.png" alt="Democratic donkey" width={200} height={200} className="w-28 sm:w-36 md:w-48 h-auto drop-shadow-2xl" />
+        <div className="absolute left-0 sm:-left-4 md:-left-8 top-1/2 -translate-y-1/2 opacity-80">
+          <Image src="/donkey.png" alt="Democratic donkey" width={400} height={400} className="w-40 sm:w-56 md:w-72 lg:w-80 h-auto drop-shadow-2xl" />
         </div>
 
         {/* Elephant - right side */}
-        <div className="absolute right-2 sm:right-8 md:right-16 bottom-4 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 opacity-80">
-          <Image src="/elephant.png" alt="Republican elephant" width={200} height={200} className="w-28 sm:w-36 md:w-48 h-auto drop-shadow-2xl" />
+        <div className="absolute right-0 sm:-right-4 md:-right-8 top-1/2 -translate-y-1/2 opacity-80">
+          <Image src="/elephant.png" alt="Republican elephant" width={400} height={400} className="w-40 sm:w-56 md:w-72 lg:w-80 h-auto drop-shadow-2xl" />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-4">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center pt-20 md:pt-28 pb-8 space-y-4">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1]">
             <span className="bg-gradient-to-r from-blue-400 via-purple-300 to-red-400 bg-clip-text text-transparent">
               Middleton
@@ -121,35 +121,30 @@ export default function WaitlistPage() {
             Where the next generation of leaders is discovered.
           </p>
           <p className="text-white/70 text-lg lg:text-xl font-semibold italic tracking-wide">
-            "Fight for your opinion and make it a fact"
-            <br />
-            <br />
+            &ldquo;Fight for your opinion and make it a fact&rdquo;
           </p>
-          <p className="text-white/70 text-lg lg:text-xl font-semibold italic tracking-wide">
-            - Charles Middleton
-          </p>
+       
         </div>
-      </section>
 
-      <section className="flex-1 flex flex-col items-center justify-center px-6 py-24 md:py-32">
-        <div className="max-w-md w-full text-center space-y-8">
+        {/* Waitlist form area */}
+        <div className="relative z-10 max-w-md mx-auto px-6 pb-20 md:pb-28 pt-8 text-center space-y-8">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Sign Up for the{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 bg-clip-text text-transparent">
+            <span className="text-white">Sign Up for the </span>
+            <span className="bg-gradient-to-r from-blue-400 via-purple-300 to-red-400 bg-clip-text text-transparent">
               Waitlist
             </span>
           </h1>
 
-          <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
+          <p className="text-white/50 text-base sm:text-lg leading-relaxed">
             Be the first to know when Middleton launches. Enter your info below
             and we&apos;ll keep you in the loop.
           </p>
 
           {submitted ? (
-            <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-8 space-y-3">
+            <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-8 space-y-3">
               <div className="text-4xl">&#10003;</div>
-              <h2 className="text-xl font-semibold">You&apos;re on the list!</h2>
-              <p className="text-muted-foreground text-sm">
+              <h2 className="text-xl font-semibold text-white">You&apos;re on the list!</h2>
+              <p className="text-white/60 text-sm">
                 We&apos;ll notify you as soon as we launch. Stay tuned.
               </p>
             </div>
@@ -162,7 +157,7 @@ export default function WaitlistPage() {
                   placeholder="Full name"
                   required
                   minLength={2}
-                  className="h-12 text-base"
+                  className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
                   disabled={isPending}
                 />
                 <Input
@@ -170,7 +165,7 @@ export default function WaitlistPage() {
                   type="email"
                   placeholder="Email address"
                   required
-                  className="h-12 text-base"
+                  className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
                   disabled={isPending}
                 />
                 <Input
@@ -179,13 +174,13 @@ export default function WaitlistPage() {
                   placeholder="Phone number"
                   required
                   minLength={7}
-                  className="h-12 text-base"
+                  className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
                   disabled={isPending}
                 />
                 <Button
                   type="submit"
                   size="lg"
-                  className="h-12 text-base font-semibold w-full"
+                  className="h-12 text-base font-semibold w-full bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 hover:from-blue-500 hover:via-purple-500 hover:to-red-400 text-white border-0"
                   disabled={isPending}
                 >
                   {isPending ? "Joining..." : "Join Waitlist"}
@@ -193,10 +188,10 @@ export default function WaitlistPage() {
               </form>
 
               {error && (
-                <p className="text-sm text-destructive font-medium">{error}</p>
+                <p className="text-sm text-red-400 font-medium">{error}</p>
               )}
 
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-white/40">
                 No spam, ever. Unsubscribe anytime.
               </p>
             </div>

@@ -25,7 +25,8 @@ export default function Home() {
             </span>
           </h1>
           <p className="text-white/60 text-lg sm:text-xl max-w-xl mx-auto">
-            Where the next generation of leaders is discovered.
+            The platform where everyday citizens become influential political
+            figures. Think of it as the LinkedIn for political leaders and ideas.
           </p>
         </div>
         <div className="absolute bottom-8 animate-bounce">
@@ -54,7 +55,7 @@ export default function Home() {
 
           <p className="text-muted-foreground text-lg sm:text-xl max-w-xl mx-auto leading-relaxed">
             The platform where political leaders are discovered, debated, and
-            elevated. We&apos;re building something big — be the first to know.
+            elevated. We&apos;re building something big, be the first to know.
           </p>
 
           <div className="pt-2">
