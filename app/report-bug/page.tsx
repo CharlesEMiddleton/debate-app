@@ -116,13 +116,21 @@ export default function ReportBugPage() {
       </header>
 
       {/* Middleton News & Politics Header */}
-      <section className="w-full bg-gradient-to-r from-blue-900 via-purple-900 to-red-900 py-10">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+      <section className="w-full bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 relative overflow-hidden py-20 md:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 via-transparent to-red-900/20" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-4">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1]">
             <span className="bg-gradient-to-r from-blue-400 via-purple-300 to-red-400 bg-clip-text text-transparent">
-              Middleton News & Politics
+              Middleton
+            </span>
+            <br />
+            <span className="text-white text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">
+              News & Politics
             </span>
           </h2>
+          <p className="text-white/50 text-sm sm:text-base">
+            Where the next generation of leaders is discovered.
+          </p>
         </div>
       </section>
 
