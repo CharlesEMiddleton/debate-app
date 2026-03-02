@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -12,30 +13,45 @@ export default function WaitlistPage() {
   const [isPending, setIsPending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      if (user.email) setEmail(user.email);
+      const meta = user.user_metadata ?? {};
+      if (meta.full_name) setFullName(meta.full_name);
+      else if (meta.name) setFullName(meta.name);
+      if (meta.phone) setPhone(meta.phone);
+      else if (user.phone) setPhone(user.phone);
+    });
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     setIsPending(true);
 
-    const formData = new FormData(e.currentTarget);
-    const fullName = (formData.get("full_name") as string)?.trim();
-    const email = (formData.get("email") as string)?.trim().toLowerCase();
-    const phone = (formData.get("phone") as string)?.trim();
+    const trimmedName = fullName.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedPhone = phone.trim();
 
-    if (!fullName || fullName.length < 2) {
+    if (!trimmedName || trimmedName.length < 2) {
       setError("Please enter your full name.");
       setIsPending(false);
       return;
     }
 
-    if (!email || !email.includes("@")) {
+    if (!trimmedEmail || !trimmedEmail.includes("@")) {
       setError("Please enter a valid email address.");
       setIsPending(false);
       return;
     }
 
-    if (!phone || phone.length < 7) {
+    if (!trimmedPhone || trimmedPhone.length < 7) {
       setError("Please enter a valid phone number.");
       setIsPending(false);
       return;
@@ -51,11 +67,11 @@ export default function WaitlistPage() {
         return;
       }
 
-      const supabase = createClient(supabaseUrl, supabaseKey);
+      const supabase = createSupabaseClient(supabaseUrl, supabaseKey);
 
       const { error: sbError } = await supabase
         .from("waitlist")
-        .insert({ full_name: fullName, email, phone });
+        .insert({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone });
 
       if (sbError) {
         if (sbError.code === "23505") {
@@ -158,6 +174,8 @@ export default function WaitlistPage() {
                   placeholder="Full name"
                   required
                   minLength={2}
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                   className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
                   disabled={isPending}
                 />
@@ -166,6 +184,8 @@ export default function WaitlistPage() {
                   type="email"
                   placeholder="Email address"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
                   disabled={isPending}
                 />
@@ -175,6 +195,8 @@ export default function WaitlistPage() {
                   placeholder="Phone number"
                   required
                   minLength={7}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
                   disabled={isPending}
                 />
