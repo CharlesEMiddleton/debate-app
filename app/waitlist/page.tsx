@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -41,27 +42,27 @@ export default function WaitlistPage() {
     }
 
     try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-      const res = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: supabaseKey,
-          Authorization: `Bearer ${supabaseKey}`,
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify({ full_name: fullName, email, phone }),
-      });
+      if (!supabaseUrl || !supabaseKey) {
+        setError("Configuration error: missing Supabase credentials.");
+        setIsPending(false);
+        return;
+      }
 
-      if (!res.ok) {
-        const data = await res.json();
-        if (data?.code === "23505") {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const { error: sbError } = await supabase
+        .from("waitlist")
+        .insert({ full_name: fullName, email, phone });
+
+      if (sbError) {
+        if (sbError.code === "23505") {
           setError("You're already on the waitlist!");
         } else {
-          console.error("Waitlist insert error:", data);
-          setError("Something went wrong. Please try again.");
+          console.error("Waitlist insert error:", sbError);
+          setError(`Error: ${sbError.message}`);
         }
       } else {
         setSubmitted(true);
