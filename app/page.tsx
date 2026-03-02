@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Typewriter } from "@/components/typewriter";
 
+
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col">
