@@ -88,7 +88,7 @@ export default function Home() {
 
       <footer className="w-full border-t border-border/40 py-8">
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between text-xs text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Middleton. All rights reserved.</p>
+          <p>&copy; 2026 Middleton. All rights reserved.</p>
           <p>Built for the future of politics.</p>
         </div>
       </footer>
