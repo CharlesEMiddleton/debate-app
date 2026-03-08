@@ -54,10 +54,10 @@ export default function Home() {
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1]">
             Find or Be the Next{" "}
             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 bg-clip-text text-transparent">
-              President, Governor,
+            Senator, Governor,
             </span>{" "}
             <span className="bg-gradient-to-r from-red-500 via-purple-600 to-blue-600 bg-clip-text text-transparent">
-              or Even Senator
+              or Even President
             </span>
           </h1>
 
@@ -91,10 +91,10 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between text-xs text-muted-foreground">
           <p>&copy; 2026 Middleton. All rights reserved.</p>
           <div className="flex items-center gap-4">
+            <p>Built for the future of politics.</p>
             <Link href="/privacy" className="hover:text-foreground transition-colors">
               Privacy Policy
             </Link>
-            <p>Built for the future of politics.</p>
           </div>
         </div>
       </footer>
