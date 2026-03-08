@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { checkWaitlistStatus } from "./actions";
 
 export default function WaitlistPage() {
   const [isPending, setIsPending] = useState(false);
@@ -16,19 +18,34 @@ export default function WaitlistPage() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [alreadyOnList, setAlreadyOnList] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) return;
+    const authClient = createClient();
+    authClient.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) { setChecking(false); return; }
+      setIsSignedIn(true);
       if (user.email) setEmail(user.email);
       const meta = user.user_metadata ?? {};
       if (meta.full_name) setFullName(meta.full_name);
       else if (meta.name) setFullName(meta.name);
       if (meta.phone) setPhone(meta.phone);
       else if (user.phone) setPhone(user.phone);
+
+      const onList = await checkWaitlistStatus();
+      if (onList) { setAlreadyOnList(true); setSubmitted(true); }
+      setChecking(false);
     });
   }, []);
+
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/");
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -75,7 +92,8 @@ export default function WaitlistPage() {
 
       if (sbError) {
         if (sbError.code === "23505") {
-          setError("You're already on the waitlist!");
+          setAlreadyOnList(true);
+          setSubmitted(true);
         } else {
           console.error("Waitlist insert error:", sbError);
           setError(`Error: ${sbError.message}`);
@@ -105,6 +123,14 @@ export default function WaitlistPage() {
             <Link href="/report-bug" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
               Report a Bug
             </Link>
+            {isSignedIn && (
+              <button
+                onClick={handleLogout}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Log Out
+              </button>
+            )}
             <ThemeSwitcher />
           </div>
         </div>
@@ -145,79 +171,103 @@ export default function WaitlistPage() {
 
         {/* Waitlist form area */}
         <div className="relative z-10 max-w-md mx-auto px-6 pb-20 md:pb-28 pt-8 text-center space-y-8">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            <span className="text-white">Sign Up for the </span>
-            <span className="bg-gradient-to-r from-blue-400 via-purple-300 to-red-400 bg-clip-text text-transparent">
-              Waitlist
-            </span>
-          </h1>
 
-          <p className="text-white/50 text-base sm:text-lg leading-relaxed">
-            Be the first to know when Middleton launches. Enter your info below
-            and we&apos;ll keep you in the loop.
-          </p>
-
-          {submitted ? (
-            <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-8 space-y-3">
-              <div className="text-4xl">&#10003;</div>
-              <h2 className="text-xl font-semibold text-white">You&apos;re on the list!</h2>
-              <p className="text-white/60 text-sm">
-                We&apos;ll notify you as soon as we launch. Stay tuned.
-              </p>
+          {checking ? (
+            <div className="flex justify-center py-12">
+              <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white/70 animate-spin" />
             </div>
+          ) : alreadyOnList ? (
+            <>
+              <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-10 space-y-4">
+                <div className="text-5xl">&#9733;</div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+                  You&apos;re already signed up!
+                </h1>
+                <p className="text-white/60 text-sm leading-relaxed">
+                  We already have you on the list{email ? ` at ${email}` : ""}. We&apos;ll reach out as soon as Middleton launches.
+                </p>
+                <p className="text-white/40 text-xs pt-2">
+                  Stay tuned — something big is coming.
+                </p>
+              </div>
+            </>
           ) : (
-            <div className="space-y-6">
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <Input
-                  name="full_name"
-                  type="text"
-                  placeholder="Full name"
-                  required
-                  minLength={2}
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
-                  disabled={isPending}
-                />
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="Email address"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
-                  disabled={isPending}
-                />
-                <Input
-                  name="phone"
-                  type="tel"
-                  placeholder="Phone number"
-                  required
-                  minLength={7}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
-                  disabled={isPending}
-                />
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="h-12 text-base font-semibold w-full bg-gray-900 hover:bg-gray-800 text-white border border-white/10"
-                  disabled={isPending}
-                >
-                  {isPending ? "Joining..." : "Join Waitlist"}
-                </Button>
-              </form>
+            <>
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                <span className="text-white">Sign Up for the </span>
+                <span className="bg-gradient-to-r from-blue-400 via-purple-300 to-red-400 bg-clip-text text-transparent">
+                  Waitlist
+                </span>
+              </h1>
 
-              {error && (
-                <p className="text-sm text-red-400 font-medium">{error}</p>
-              )}
-
-              <p className="text-xs text-white/40">
-                No spam, ever. Unsubscribe anytime.
+              <p className="text-white/50 text-base sm:text-lg leading-relaxed">
+                Be the first to know when Middleton launches. Enter your info below
+                and we&apos;ll keep you in the loop.
               </p>
-            </div>
+
+              {submitted ? (
+                <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-8 space-y-3">
+                  <div className="text-4xl">&#10003;</div>
+                  <h2 className="text-xl font-semibold text-white">You&apos;re on the list!</h2>
+                  <p className="text-white/60 text-sm">
+                    We&apos;ll notify you as soon as we launch. Stay tuned.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <Input
+                      name="full_name"
+                      type="text"
+                      placeholder="Full name"
+                      required
+                      minLength={2}
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
+                      disabled={isPending}
+                    />
+                    <Input
+                      name="email"
+                      type="email"
+                      placeholder="Email address"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
+                      disabled={isPending}
+                    />
+                    <Input
+                      name="phone"
+                      type="tel"
+                      placeholder="Phone number"
+                      required
+                      minLength={7}
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="h-12 text-base bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-purple-400"
+                      disabled={isPending}
+                    />
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="h-12 text-base font-semibold w-full bg-gray-900 hover:bg-gray-800 text-white border border-white/10"
+                      disabled={isPending}
+                    >
+                      {isPending ? "Joining..." : "Join Waitlist"}
+                    </Button>
+                  </form>
+
+                  {error && (
+                    <p className="text-sm text-red-400 font-medium">{error}</p>
+                  )}
+
+                  <p className="text-xs text-white/40">
+                    No spam, ever. Unsubscribe anytime.
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

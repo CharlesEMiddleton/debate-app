@@ -90,7 +90,12 @@ export default function Home() {
       <footer className="w-full border-t border-border/40 py-8">
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between text-xs text-muted-foreground">
           <p>&copy; 2026 Middleton. All rights reserved.</p>
-          <p>Built for the future of politics.</p>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-foreground transition-colors">
+              Privacy Policy
+            </Link>
+            <p>Built for the future of politics.</p>
+          </div>
         </div>
       </footer>
     </main>
